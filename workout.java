@@ -13,10 +13,10 @@ final class Workout {
     }
 
     // calculateBurnedCalories() – arvutab treeningu energiakulu
-    public int calculateBurnedCalories(double weightKg) {
-        if (weightKg <= 0) throw new IllegalArgumentException();
+    public int calculateBurnedCalories(double weight) {
+        if (weight <= 0) throw new IllegalArgumentException();
         double f = switch (type) { case LOW -> 2.5; case MEDIUM -> 5.0; case HIGH -> 8.0; };
-        return burnedCalories = (int) Math.round(weightKg * f * durationHours);
+        return burnedCalories = (int) Math.round(weight * f * durationHours);
     }
 }
 
@@ -48,3 +48,4 @@ public class HealthDemo {
         System.out.println(s.sleepQualityAdvice());
     }
 }
+
