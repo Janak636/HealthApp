@@ -1,7 +1,8 @@
 import java.util.ArrayList;
 import java.util.List;
 
-class Food { // 100 grammi kohta
+// Esindab toiduainet koos toiteväärtuse teabega 100 g kohta
+class Food {
     private String name;
     private double calories;
     private double protein;
@@ -43,6 +44,7 @@ class Food { // 100 grammi kohta
     }
 }
 
+// Esindab toidukorda, mis koosneb mitmest toiduainest
 class Meal {
     private String mealName;
     private List<Food> foods;
@@ -112,7 +114,7 @@ class Meal {
         StringBuilder sb = new StringBuilder();
         sb.append(mealName + ":\n");
         for(int i = 0; i < foods.size(); i++) {
-            sb.append(foods.get(i).getName() + " " + grams.get(i) + "g");
+            sb.append(foods.get(i).getName() + " " + String.format("%.0f", grams.get(i)) + "g");
         }
         sb.append(String.format(" Kokku: %.0f kcal | %s", getCalories(), getMacros()));
         return sb.toString();
