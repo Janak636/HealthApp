@@ -20,13 +20,14 @@ public class Workout {
     }
 @Override
     public String toString() {
-        return "Workout{" +
-                "type=" + type +
-                ", durationHours=" + durationHours +
-                ", burnedCalories=" + workoutburnedCalories +
+        return "Treeningu{" +
+                "tüüp=" + type +
+                ", kestus" + durationHours +
+                ", kulutatud kalorid " + workoutburnedCalories +
                 '}';
     
 }
+
 
 
 
