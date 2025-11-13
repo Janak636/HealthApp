@@ -18,7 +18,16 @@ public class Workout {
         workoutburnedCalories = (int) Math.round(weight * f * durationHours);
         return workoutburnedCalories;
     }
+@Override
+    public String toString() {
+        return "Workout{" +
+                "type=" + type +
+                ", durationHours=" + durationHours +
+                ", burnedCalories=" + workoutburnedCalories +
+                '}';
+    
 }
+
 
 
 
