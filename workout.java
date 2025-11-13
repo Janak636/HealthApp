@@ -1,8 +1,8 @@
 enum ActivityLevel { LOW, MEDIUM, HIGH }
 
 public class Workout {
-    private final ActivityLevel type;
-    private final double durationHours;
+    private ActivityLevel type;
+    private double durationHours;
     private int workoutburnedCalories;
 
     public Workout(ActivityLevel type, double durationHours) {
@@ -37,5 +37,6 @@ public class Sleep {
         return "Olid vist väga väsinud. ";
     }
 }
+
 
 
