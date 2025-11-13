@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class Peaklass {
     public static void main(String[] args) {
         User user1 = new User("Jana", "N", 22, 173.5, 58.5, 2, 3, 10000);
@@ -39,7 +41,7 @@ public class Peaklass {
         System.out.print("Mitu tundi magasid? ");
         int hours = sc.nextInt();
 
-        sleep s = new sleep();
+        Sleep s = new Sleep();
         s.setSleepDuration(hours);
         System.out.println(s.sleepQualityAdvice());
 
@@ -47,4 +49,5 @@ public class Peaklass {
 
     }
 }
+
 
