@@ -157,7 +157,7 @@ class User {
             return 10 * weight + 6.25 * height - 5 * age - 161;
         }
     }
-
+//puhkeolekus ainevahetuseks kuluv energia
     public double calculateCalorieNeeds() {
         double bmr = calculateBMR();
         double activityMultiplier;
@@ -214,4 +214,5 @@ class User {
                 "Sammud päevas: " + dailySteps + "\n";
     }
 }
+
 
