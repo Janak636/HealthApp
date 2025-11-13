@@ -1,8 +1,6 @@
-package health_app;
-
 class User {
     private String name;
-    private String gender; // "M" või "F"
+    private String gender; // "M" või "N"
     private int age;
     private double height; // cm
     private double weight; // kg
@@ -14,12 +12,9 @@ class User {
        5 Väga aktiivne: füüsiliselt nõudlik töö ja lisaks regulaarne trenn
      */
     private int goal; /*
-       1 = Keskendun aktiivsele rasvakaotusele ja kergele lihasmassi kasvatamisele
-       2 = Keskendun tervislikule ja tasakaalustatud eluviisile: kerge rasvakaotus ja lihaste tugevdamine
+       1 = Keskendun aktiivsele rasvakaotusele
+       2 = Keskendun tervislikule ja tasakaalustatud eluviisile
        3 = Keskendun aktiivsele lihasmassi kasvatamisele ja stabiilsele kaalutõusule
-
-        When BMI < 18.5: Sinu kehamassiindeks on alla 18.5 – kaalulangetus ei ole soovitatav.
-        Palun vali selle asemel „Tervislik ja tasakaalustatud eluviis“
      */
     private int dailySteps;
 
@@ -75,31 +70,57 @@ class User {
     }
 
     public void setGender(String gender) {
-        this.gender = gender;
+        if(gender.equals("M") || gender.equals("N")){
+            this.gender = gender;
+        }
     }
 
     public void setAge(int age) {
-        this.age = age;
+        if(age > 16 && age < 100){
+            this.age = age;
+        }else{
+            System.out.println("Äppi kasutamiseks pead olema vähemalt 16 aastane!");
+        }
     }
 
     public void setHeight(double height) {
-        this.height = height;
+        if(height > 120 && height < 300){
+            this.height = height;
+        }else{
+            System.out.println("Sisesta oma pikkus sentimeetrites!");
+        }
     }
 
     public void setWeight(double weight) {
-        this.weight = weight;
+        if(weight > 30 && weight < 300){
+            this.weight = weight;
+        }else{
+            System.out.println("Sisesta oma kaal kilogrammides!");
+        }
     }
 
     public void setActivityLevel(int activityLevel) {
-        this.activityLevel = activityLevel;
+        if(activityLevel > 0 && activityLevel < 6){
+            this.activityLevel = activityLevel;
+        }else{
+            System.out.println("Vali aktiivsuse tase ühest viieni!");
+        }
     }
 
     public void setGoal(int goal) {
-        this.goal = goal;
+        if(goal > 0 && goal < 4){
+            this.goal = goal;
+        }else{
+            System.out.println("Vali oma eesmärk kolmest antud valikust (1-3)!");
+        }
     }
 
     public void setDailySteps(int dailySteps) {
-        this.dailySteps = dailySteps;
+        if(dailySteps > 0 && dailySteps < 100000){
+            this.dailySteps = dailySteps;
+        }else{
+            System.out.println("Sisesta oma realistlik sammude arv päevas!");
+        }
     }
 
     public String getActivityLevelText() {
@@ -115,7 +136,7 @@ class User {
 
     public String getGoalText() {
         return switch (goal) {
-            case 1 -> "Aktiivne rasvakaotus ja kerge lihasmassi kasvatamine";
+            case 1 -> "Aktiivne rasvakaotus";
             case 2 -> "Tervislik ja tasakaalustatud eluviis";
             case 3 -> "Aktiivne lihasmassi kasvatamine ja stabiilne kaalutõus";
             default -> "Teadmata";
@@ -145,23 +166,25 @@ class User {
         double bmi = calculateBMI();
         // Kui BMI < 18.5 ja eesmärk on rasvakaotus (goal == 1), siis ei ole sobiv
         if (bmi < 18.5 && goal == 1) {
+            System.out.println("Sinu kehamassiindeks on alla 18.5 – kaalulangetus võib olla ohtlik! Palun vali selle asemel 'Tervislik ja tasakaalustatud eluviis'");
             return false;
         }
         return true;
     }
 
-    private double calculateBMR() {
+    private double calculateBMR() { // Baasainevahetuseks kuuluv energia
         if (gender.equalsIgnoreCase("M")) {
             return 10 * weight + 6.25 * height - 5 * age + 5;
         } else {
             return 10 * weight + 6.25 * height - 5 * age - 161;
         }
     }
-//puhkeolekus ainevahetuseks kuluv energia
+
     public double calculateCalorieNeeds() {
         double bmr = calculateBMR();
         double activityMultiplier;
 
+        // Aktiivsuse parameeter
         activityMultiplier = switch (activityLevel) {
             case 1 -> 1.2;    // Istuv
             case 2 -> 1.375;  // Kergelt aktiivne
@@ -183,19 +206,18 @@ class User {
     public String calculateMacros() {
         double calories = calculateCalorieNeeds();
         double protein, carbs, fats;
-
-        if (goal == 1) {
-            protein = calories * 0.35 / 4;
-            fats = calories * 0.30 / 9;
-            carbs = calories * 0.35 / 4;
-        } else if (goal == 3) {
-            protein = calories * 0.35 / 4;
-            fats = calories * 0.20 / 9;
-            carbs = calories * 0.45 / 4;
-        } else {
-            protein = calories * 0.25 / 4;
-            fats = calories * 0.30 / 9;
-            carbs = calories * 0.45 / 4;
+        if (goal == 1) {  // Rasvakaotus
+            protein = calories * 0.40 / 4;  // 40%
+            fats = calories * 0.30 / 9;     // 30%
+            carbs = calories * 0.30 / 4;    // 30%
+        } else if (goal == 3) {  // Kaalutõus
+            protein = calories * 0.25 / 4;  // 25%
+            fats = calories * 0.25 / 9;     // 25%
+            carbs = calories * 0.50 / 4;    // 50%
+        } else {  // Tervislik eluviis
+            protein = calories * 0.25 / 4;  // 25%
+            fats = calories * 0.30 / 9;     // 30%
+            carbs = calories * 0.45 / 4;    // 45%
         }
 
         return String.format("Valgud: %.0fg, Süsivesikud: %.0fg, Rasvad: %.0fg",
@@ -207,12 +229,14 @@ class User {
                 "Nimi: " + name + "\n" +
                 "Sugu: " + (gender.equalsIgnoreCase("M") ? "Mees" : "Naine") + "\n" +
                 "Vanus: " + age + " aastat\n" +
-                "Pikkus: " + height + " cm\n" +
-                "Kaal: " + weight + " kg\n" +
+                "Pikkus: " +  String.format("%.1f", height)  + " cm\n" +
+                "Kaal: " + String.format("%.1f", weight) + " kg\n" +
                 "Aktiivsustase: " + getActivityLevelText() + "\n" +
                 "Eesmärk: " + getGoalText() + "\n" +
                 "Sammud päevas: " + dailySteps + "\n";
     }
 }
+
+
 
 
