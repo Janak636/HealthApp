@@ -1,6 +1,6 @@
 enum ActivityLevel { LOW, MEDIUM, HIGH }
 
-final class Workout {
+public class Workout {
     private final ActivityLevel type;
     private final double durationHours;
     private int workoutburnedCalories;
@@ -20,7 +20,7 @@ final class Workout {
     }
 }
 
-final class Sleep {
+public class Sleep {
     private double durationHours;
 
     // setSleepDuration() – kasutaja sisestab une pikkuse
@@ -37,4 +37,5 @@ final class Sleep {
         return "Olid vist väga väsinud. ";
     }
 }
+
 
