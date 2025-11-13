@@ -1,1 +1,67 @@
--
+// Annab kasutaja kaebuste põhjal tervisenõu
+class HealthAdvice {
+    private User user;
+
+    public HealthAdvice(User user) {
+        this.user = user;
+    }
+
+    public String giveAdvice(String kaebus) {
+        String advice = "";
+        String kaebusLower = kaebus.toLowerCase();
+
+        if (kaebusLower.contains("energ") || kaebusLower.contains("väsi")) {
+            advice = "Madal energiatase võib olla seotud:\n";
+            if (user.getGoal() == 1) { // Kui eesmärgiks on aktiivne rasvakaotamine
+                advice += "- Liiga suure kaloripuudujäägiga. Kontrolli oma kaloreid!\n";
+            }
+            if (user.getGender().equalsIgnoreCase("N")) {
+                advice += "- Rauavaegusega (eriti noortel naistel). Söö rohkem punast liha, kaunvilju ja tumerohelisi lehtköögivilju.\n";
+            }else{
+                advice += "- Ebapiisava unega. Proovi magada 7-9 tundi öösel.\n";
+            }
+
+        } else if (kaebusLower.contains("uni") || kaebusLower.contains("maga")) {
+            advice = "Uneprobleemide lahendamiseks:\n";
+            advice += "- Hoia magamistoas jahe temperatuur (16-19°C).\n";
+            if (user.getActivityLevel() == 5) { // Kui isikul on väga kõrge aktiivsus
+                advice += "Proovi vältida kõrget aktiivsust paar tundi enne magamaminekut.\n";
+                advice += "- Väldi kofeiini pärast kella 14.\n";
+            } else if (user.getActivityLevel() == 1) { // Kui isikul on väga madal aktiivsus
+                advice += "- Väldi ekraane 1-2 tundi enne magamaminekut.\n";
+                advice += "- Proovi tõsta oma aktiivsust. Liiga madal aktiivsus negatiivselt mõjutab unekvaliteeti.";
+            }
+
+        } else if (kaebusLower.contains("kaal") || kaebusLower.contains("rasv")) {
+            advice = "Kaalu reguleerimiseks:\n";
+            double bmi = user.calculateBMI();
+            if (bmi < 18.5) {
+                advice += "- BMI on liiga madal. Suurenda kalorite tarbimist 300-500 võrra päevas.\n";
+                advice += "- Keskendu valgurikkale toidule ja jõutreeningule.\n";
+            } else if (bmi > 25) {
+                advice += "- Loo mõõdukas kaloripuudujääk (300-500 kcal päevas).\n";
+                advice += "- Lisa kardio- ja jõutreeningut 3-4 korda nädalas.\n";
+            }
+
+        } else if (kaebusLower.contains("tre") || kaebusLower.contains("motivatsioon")) {
+            advice = "Treeningu motivatsiooni suurendamiseks:\n";
+            advice += "- Leia treeningkaaslane või grupp.\n";
+            advice += "- Pea treeningpäevikut edusammude jälgimiseks.\n";
+            if (user.getActivityLevel() == 1) {
+                advice += "- Kui ei ole varem spordiga tegelenud, kaalu gruppitreeningutes osalemist.\n";
+            }
+
+        } else if (kaebusLower.contains("stress") || kaebusLower.contains("ärevus")) {
+            advice = "Stressi vähendamiseks:\n";
+            advice += "- Veendu, et saad piisavalt und (7-9 tundi).\n";
+            advice += "- Kui stress on püsiv, otsi professionaalset abi.\n";
+            if (user.getActivityLevel() == 1 || user.getActivityLevel() == 2) {
+                advice += "- Loo harjumus teha regulaarset trenni.\n";
+        }
+        } else if (kaebusLower.contains("valu") || kaebusLower.contains("vigastus")) {
+            advice = "Kindlasti külasta arsti! Äppi kasutamine ei asenda arsti külastamist!\n";
+        } else {
+            return "Sisesta kaebus trennide, toitumise, une või stressi kohta.";
+        }return advice;
+    }
+}
