@@ -19,5 +19,32 @@ public class Peaklass {
         HealthAdvice advice = new HealthAdvice(user1);
         System.out.println(advice.giveAdvice("Olen nii väsinud, ei viitsi midagi teha."));
 
+        Scanner sc = new Scanner(System.in);
+
+        // --- Workout input ---
+        System.out.print("Sisesta treeningu tase (LOW, MEDIUM, HIGH): ");
+        String levelInput = sc.nextLine().toUpperCase();
+        ActivityLevel level = ActivityLevel.valueOf(levelInput);
+
+        System.out.print("Sisesta treeningu kestus tundides: ");
+        double duration = sc.nextDouble();
+
+        System.out.print("Sisesta kehakaal kilogrammides: ");
+        double weight = sc.nextDouble();
+
+        Workout w = new Workout(level, duration);
+        System.out.println("Treeninguga kulutasid " + w.calculateBurnedCalories(weight) + " kalorit.");
+
+        // --- Sleep input ---
+        System.out.print("Mitu tundi magasid? ");
+        int hours = sc.nextInt();
+
+        sleep s = new sleep();
+        s.setSleepDuration(hours);
+        System.out.println(s.sleepQualityAdvice());
+
+        sc.close();
+
     }
 }
+
