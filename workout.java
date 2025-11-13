@@ -1,37 +1,83 @@
-enum ActivityLevel { LOW, MEDIUM, HIGH }
-
-public class Workout {
-    private ActivityLevel type;
+class Workout {
+    private String workoutType; // "Madal", "Keskmine", "Kõrge"
     private double durationHours;
-    private int workoutburnedCalories;
+    private double burnedCalories;
 
-    public Workout(ActivityLevel type, double durationHours) {
-        if (type == null || durationHours <= 0) throw new IllegalArgumentException();
-        this.type = type;
+    // Jälgib treeninguinfot ja arvutab põletatud kalorid
+    public Workout(String workoutType, double durationHours) {
+        this.workoutType = workoutType;
+        this.durationHours = durationHours;
+        this.burnedCalories = 0; // Arvutatakse hiljem
+    }
+
+    public String getWorkoutType() {
+        return workoutType;
+    }
+
+    public double getDurationHours() {
+        return durationHours;
+    }
+
+    public double getBurnedCalories() {
+        return burnedCalories;
+    }
+
+    public void calculateBurnedCalories(double weight) {
+        double multiplier;
+        if (workoutType.equalsIgnoreCase("Madal")) {
+            multiplier = 2.5;
+        } else if (workoutType.equalsIgnoreCase("Keskmine")) {
+            multiplier = 5.0;
+        } else if (workoutType.equalsIgnoreCase("Kõrge")) {
+            multiplier = 8.0;
+        } else {
+            multiplier = 2.5; // Default
+        }
+
+        burnedCalories = weight * multiplier * durationHours;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s intensiivsusega treening (%.1f tundi): %.0f kcal põletatud",
+                workoutType, durationHours, burnedCalories);
+    }
+}
+
+// Jälgib unekestust ja annab nõu une kvaliteedi parandamiseks
+class Sleep {
+    private double durationHours;
+
+    public Sleep(double durationHours) {
         this.durationHours = durationHours;
     }
 
-    // calculateBurnedCalories() – arvutab treeningu energiakulu
-    public int calculateBurnedCalories(double weight) {
-        if (weight <= 0) throw new IllegalArgumentException();
-        double f = switch (type) { case LOW -> 2.5; case MEDIUM -> 5.0; case HIGH -> 8.0; };
-        workoutburnedCalories = (int) Math.round(weight * f * durationHours);
-        return workoutburnedCalories;
+    public double getDurationHours() {
+        return durationHours;
     }
-@Override
+
+    public void setDurationHours(double hours) {
+        if (hours >= 0 && hours <= 24) {
+            this.durationHours = hours;
+        } else {
+            System.out.println("Sisesta realistlik uneaeg tundides!");
+        }
+    }
+
+    public String getSleepQualityAdvice() {
+        if (durationHours < 6) {
+            return "Mine varem magama ja vähenda ekraaniaega.";
+        } else if (durationHours < 7) {
+            return "Hea algus, aga võta eesmärgiks saada 7–9 tundi und.";
+        } else if (durationHours <= 9) {
+            return "Tubli! Jätka samas vaimus ja hoia ühtlast unerütmi.";
+        } else {
+            return "Olid vist väga väsinud.";
+        }
+    }
+
+    @Override
     public String toString() {
-        return "Treeningu{" +
-                "tüüp=" + type +
-                ", kestus" + durationHours +
-                ", kulutatud kalorid " + workoutburnedCalories +
-                '}';
-    
+        return String.format("Und: %.1f tundi | %s", durationHours, getSleepQualityAdvice());
+    }
 }
-
-
-
-
-
-
-
-
