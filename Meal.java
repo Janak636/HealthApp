@@ -9,7 +9,18 @@ class Food {
     private double carbs;
     private double fats;
 
-    public Food(String name, double calories, double protein, double carbs, double fats) {
+    public Food(String name, double calories, double protein, double carbs, double fats) throws UniversalUserException {
+        if (calories < 0 || calories > 900) {
+            throw new UniversalUserException("Kaloreid peab olema vahemikus 0-900 kcal 100g kohta! (Kontrolli andmeid: " + name + ")");
+        }
+        if (protein < 0 || protein > 100 || carbs < 0 || carbs > 100 || fats < 0 || fats > 100) {
+            throw new UniversalUserException("Valke, süsivesikuid või rasva ei saa olla < 0g või > 100g. Kontrolli andmeid: " + name + "!");
+        }
+
+        double totalMacros = protein + carbs + fats;
+        if (totalMacros > 105) {
+            throw new UniversalUserException("Valgud + süsivesikud + rasvad ei saa kokku ületada 100g! (Kontrolli andmeid: " + name + ", kokku: " + String.format("%.1f", totalMacros) + "g)");
+        }
         this.name = name;
         this.calories = calories;
         this.protein = protein;
@@ -50,7 +61,7 @@ class Meal {
     private List<Food> foods;
     private List<Double> grams; // Söögikorra kaal grammides
 
-    public Meal(String mealName) {
+    public Meal(String mealName){
         this.mealName = mealName;
         this.foods = new ArrayList<>();
         this.grams = new ArrayList<>();
@@ -80,7 +91,10 @@ class Meal {
         return total;
     }
 
-    public void addFood(Food food, double gramsEaten) {
+    public void addFood(Food food, double gramsEaten) throws UniversalUserException {
+        if (gramsEaten < 1 || gramsEaten > 2000) {
+            throw new UniversalUserException("Toidu kaal on vale. Sisesta grammides!");
+        }
         foods.add(food);
         grams.add(gramsEaten);
     }
