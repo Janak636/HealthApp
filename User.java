@@ -20,15 +20,15 @@ class User {
 
     // Constructor
     public User(String name, String gender, int age, double height, double weight,
-                int activityLevel, int goal, int dailySteps) {
+                int activityLevel, int goal, int dailySteps) throws UniversalUserException {
         this.name = name;
-        this.gender = gender;
-        this.age = age;
-        this.height = height;
-        this.weight = weight;
-        this.activityLevel = activityLevel;
-        this.goal = goal;
-        this.dailySteps = dailySteps;
+        setGender(gender);
+        setAge(age);
+        setHeight(height);
+        setWeight(weight);
+        setActivityLevel(activityLevel);
+        setGoal(goal);
+        setDailySteps(dailySteps);
     }
 
     //Getters
@@ -69,58 +69,53 @@ class User {
         this.name = name;
     }
 
-    public void setGender(String gender) {
-        if(gender.equals("M") || gender.equals("N")){
-            this.gender = gender;
+    public void setGender(String gender) throws UniversalUserException {
+        if(!gender.equals("M") && !gender.equals("N")) {
+            throw new UniversalUserException("Sugu peab olema 'M' või 'N'!");
         }
+        this.gender = gender;
     }
 
-    public void setAge(int age) {
-        if(age > 16 && age < 100){
-            this.age = age;
-        }else{
-            System.out.println("Äppi kasutamiseks pead olema vähemalt 16 aastane!");
+    public void setAge(int age) throws UniversalUserException {
+        if(age < 16 || age > 100) {
+            throw new UniversalUserException("Äppi kasutamiseks pead olema vähemalt 16 aastane!");
         }
+        this.age = age;
     }
 
-    public void setHeight(double height) {
-        if(height > 120 && height < 300){
-            this.height = height;
-        }else{
-            System.out.println("Sisesta oma pikkus sentimeetrites!");
+    public void setHeight(double height) throws UniversalUserException {
+        if(height < 120 || height > 300) {
+            throw new UniversalUserException("Sisesta oma pikkus sentimeetrites!");
         }
+        this.height = height;
     }
 
-    public void setWeight(double weight) {
-        if(weight > 30 && weight < 300){
-            this.weight = weight;
-        }else{
-            System.out.println("Sisesta oma kaal kilogrammides!");
+    public void setWeight(double weight) throws UniversalUserException {
+        if(weight < 30 || weight > 300) {
+            throw new UniversalUserException("Sisesta oma kaal kilogrammides!");
         }
+        this.weight = weight;
     }
 
-    public void setActivityLevel(int activityLevel) {
-        if(activityLevel > 0 && activityLevel < 6){
-            this.activityLevel = activityLevel;
-        }else{
-            System.out.println("Vali aktiivsuse tase ühest viieni!");
+    public void setActivityLevel(int activityLevel) throws UniversalUserException {
+        if(activityLevel < 1 || activityLevel > 5) {
+            throw new UniversalUserException("Vali aktiivsuse tase ühest viieni!");
         }
+        this.activityLevel = activityLevel;
     }
 
-    public void setGoal(int goal) {
-        if(goal > 0 && goal < 4){
-            this.goal = goal;
-        }else{
-            System.out.println("Vali oma eesmärk kolmest antud valikust (1-3)!");
+    public void setGoal(int goal) throws UniversalUserException {
+        if(goal < 1 || goal > 3) {
+            throw new UniversalUserException("Vali oma eesmärk kolmest antud valikust (1-3)!");
         }
+        this.goal = goal;
     }
 
-    public void setDailySteps(int dailySteps) {
-        if(dailySteps > 0 && dailySteps < 100000){
-            this.dailySteps = dailySteps;
-        }else{
-            System.out.println("Sisesta oma realistlik sammude arv päevas!");
+    public void setDailySteps(int dailySteps) throws UniversalUserException {
+        if(dailySteps < 0 || dailySteps > 100000) {
+            throw new UniversalUserException("Sisesta oma realistlik sammude arv päevas!");
         }
+        this.dailySteps = dailySteps;
     }
 
     public String getActivityLevelText() {
@@ -162,11 +157,10 @@ class User {
         }
     }
 
+    // Ohtlik eesmärk
     public boolean isGoalSuitableForBMI() {
         double bmi = calculateBMI();
-        // Kui BMI < 18.5 ja eesmärk on rasvakaotus (goal == 1), siis ei ole sobiv
         if (bmi < 18.5 && goal == 1) {
-            System.out.println("Sinu kehamassiindeks on alla 18.5 – kaalulangetus võib olla ohtlik! Palun vali selle asemel 'Tervislik ja tasakaalustatud eluviis'");
             return false;
         }
         return true;
@@ -236,7 +230,4 @@ class User {
                 "Sammud päevas: " + dailySteps + "\n";
     }
 }
-
-
-
 

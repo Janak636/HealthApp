@@ -1,15 +1,21 @@
 class Workout {
-    private String workoutType; // "Madal", "Keskmine", "Kõrge"
+    private String workoutType;
     private double durationHours;
     private double burnedCalories;
 
-    // Jälgib treeninguinfot ja arvutab põletatud kalorid
-    public Workout(String workoutType, double durationHours) {
+    public Workout(String workoutType, double durationHours) throws UniversalUserException {
+        if (!workoutType.equalsIgnoreCase("Madal") &&
+                !workoutType.equalsIgnoreCase("Keskmine") &&
+                !workoutType.equalsIgnoreCase("Kõrge")) {
+            throw new UniversalUserException("Treeningu intensiivsus peab olema 'Madal', 'Keskmine' või 'Kõrge'!");
+        }
+        if (durationHours <= 0 || durationHours > 24) {
+            throw new UniversalUserException("Treeningu kestus peab olema vahemikus 0-24 tundi!");
+        }
         this.workoutType = workoutType;
         this.durationHours = durationHours;
-        this.burnedCalories = 0; // Arvutatakse hiljem
+        this.burnedCalories = 0;
     }
-
     public String getWorkoutType() {
         return workoutType;
     }
@@ -44,24 +50,22 @@ class Workout {
     }
 }
 
-// Jälgib unekestust ja annab nõu une kvaliteedi parandamiseks
 class Sleep {
     private double durationHours;
 
-    public Sleep(double durationHours) {
-        this.durationHours = durationHours;
+    public Sleep(double durationHours) throws UniversalUserException {
+        setDurationHours(durationHours);
     }
 
     public double getDurationHours() {
         return durationHours;
     }
 
-    public void setDurationHours(double hours) {
-        if (hours >= 0 && hours <= 24) {
-            this.durationHours = hours;
-        } else {
-            System.out.println("Sisesta realistlik uneaeg tundides!");
+    public void setDurationHours(double hours) throws UniversalUserException {
+        if (hours < 0 || hours > 24) {
+            throw new UniversalUserException("Sisesta realistlik uneaeg tundides (0-24)!");
         }
+        this.durationHours = hours;
     }
 
     public String getSleepQualityAdvice() {
