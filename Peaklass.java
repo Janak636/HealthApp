@@ -1,177 +1,139 @@
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.time.LocalDate;
+import java.util.*;
 
-// Töötleb kasutaja sisendit ja näitab tervise jälgimise süsteemi
 public class Peaklass {
-    public static List<Food> loeSöögid(String failinimi) throws Exception {
-        List<Food> söögid = new ArrayList<>();
-        File fail = new File(failinimi);
 
-        try (Scanner sc = new Scanner(fail, "UTF-8")) {
-            while (sc.hasNextLine()) {
-                String line = sc.nextLine();
-                String[] tykid = line.split(",");
-                String name = tykid[0];
-                double calories = Double.parseDouble(tykid[1]);
-                double proteins = Double.parseDouble(tykid[2]);
-                double carbs = Double.parseDouble(tykid[3]);
-                double fats = Double.parseDouble(tykid[4]);
-                söögid.add(new Food(name, calories, proteins, carbs, fats));
+    public static void main(String[] args) {
+        System.out.println("TEST 1: Sobiv kasutaja");
+
+        try {
+            User user = new User("Mari", "N", 25, 165, 47, 3, 3, 8000);
+            List<String> complaints = new ArrayList<>();
+            HealthAdvice advice = new HealthAdvice(user);
+            complaints.add("Olen nii väsinud, ei viitsi jätkata.");
+            complaints.add("Mul on pidev unetus...");
+            complaints.add("Kaal üldse ei lange.");
+            complaints.add("Trenni tegemine on nii tüütu.");
+            complaints.add("Lihased valutavad.");
+            System.out.println("Kasutaja loodud");
+            System.out.println("BMI: " + String.format("%.1f", user.calculateBMI()));
+            System.out.println("Kalorivajadus: " + String.format("%.0f", user.calculateCalorieNeeds()));
+            System.out.println("Nõuanded: ");
+            for(String complaint : complaints){
+                System.out.println(advice.giveAdvice(complaint));
             }
+        } catch (UniversalUserException e) {
+            System.out.println("Viga: " + e.getMessage());
         }
-        return söögid;
-    }
 
-    public static void main(String[] args) throws Exception {
-        List<Food> söögidFailist = loeSöögid("söögid.txt");
-        String[] femaleNames = {"Anni", "Liisi", "Katre", "Kreete", "Eliise", "Mari"};
-        String[] maleNames = {"Martin", "Toomas", "Jaan", "Tõnis", "Sander", "Markus", "Ekke"};
-        String[] genders = {"M", "N"};
-        String[] complaints = {"Olen väga väsinud. Energiat trenni tegemiseks üldse pole.", "Mu kaal ei lange isegi kui söön tervislikult.", "Olen ülikooli pärast kogu aeg stressis, mistõttu söön tihti üle."};
+        System.out.println("TEST 2: Ebasobiv vanus");
+        try {
+            User user = new User("Laps", "M", 9, 140, 35, 1, 2, 5000);
+            System.out.println("Ei visanud viga!");
+        } catch (UniversalUserException e) {
+            System.out.println("Õigesti viskas vea: " + e.getMessage());
+        }
 
-        List<User> users = new ArrayList<>();
+        System.out.println("TEST 3: Ebasobiv kaal");
+        try {
+            User user = new User("Suur", "M", 30, 180, 1000, 2, 2, 8000);
+            System.out.println("Ei visanud viga!");
+        } catch (UniversalUserException e) {
+            System.out.println("Õigesti viskas vea: " + e.getMessage());
+        }
 
-        // Genereerime suvelisi isikuid
-        for (int i = 0; i < 3; i++) {
-            String gender = genders[(int)(Math.random() * 2)];
-            String name;
-            if(gender.equals("M")){
-                name = maleNames[(int)(Math.random() * maleNames.length)];
-            }else{
-                name = femaleNames[(int)(Math.random() * femaleNames.length)];
+        System.out.println("TEST 4: Toit");
+        try {
+            Food apple = new Food("Õun", 52, 0.3, 14, 0.2);
+            System.out.println("Toit loodud: " + apple);
+        } catch (UniversalUserException e) {
+            System.out.println("Viga: " + e.getMessage());
+        }
+
+        System.out.println("TEST 5: Ebasobiv toit");
+        try {
+            Food badFood = new Food("Vale", 500, 50, 40, 30); // 120g total
+            System.out.println("Ei visanud viga!");
+        } catch (UniversalUserException e) {
+            System.out.println("Õigesti viskas vea: " + e.getMessage());
+        }
+
+        System.out.println("TEST 6: Treening");
+        try {
+            Workout workout = new Workout("Keskmine", 1.5);
+            workout.calculateBurnedCalories(70);
+            System.out.println("Treening: " + workout);
+        } catch (UniversalUserException e) {
+            System.out.println("Viga: " + e.getMessage());
+        }
+
+        System.out.println("TEST 7: Ebasobiv treening");
+        try {
+            Workout badWorkout = new Workout("Super", 1);
+            System.out.println("Ei visanud viga!");
+        } catch (UniversalUserException e) {
+            System.out.println("Õigesti viskas vea: " + e.getMessage());
+        }
+
+        System.out.println("TEST 8: Uni");
+        try {
+            Sleep sleep = new Sleep(7.5);
+            System.out.println("Uni: " + sleep);
+        } catch (UniversalUserException e) {
+            System.out.println("Viga: " + e.getMessage());
+        }
+
+        System.out.println("TEST 9: Ebasobiv uni");
+        try {
+            Sleep badSleep = new Sleep(25);
+            System.out.println("Ei visanud viga!");
+        } catch (UniversalUserException e) {
+            System.out.println("Õigesti viskas vea: " + e.getMessage());
+        }
+
+        System.out.println("TEST 10: Täielik päeviku sissekanne");
+        try {
+            User user = new User("Test", "M", 30, 175, 75, 3, 2, 10000);
+
+            DailyLog log = new DailyLog(LocalDate.now(), user.getName());
+            log.setWeight(75);
+            log.setSteps(12000);
+            log.setSleep(new Sleep(8));
+
+            Meal breakfast = new Meal("Hommikusöök");
+            Food eggs = new Food("Munad", 155, 13, 1.1, 11);
+            breakfast.addFood(eggs, 100);
+            log.addMeal(breakfast);
+
+            Workout workout = new Workout("Madal", 0.5);
+            workout.calculateBurnedCalories(75);
+            log.addWorkout(workout);
+
+            System.out.println("Päevik loodud");
+            System.out.println("Netokalorid: " + String.format("%.0f", log.getNetCalories()));
+
+        } catch (UniversalUserException e) {
+            System.out.println("Viga: " + e.getMessage());
+        }
+
+        System.out.println("TEST 11: Statistika");
+        try {
+            User user = new User("Statistika", "N", 28, 168, 62, 2, 1, 9000);
+            Statistics stats = new Statistics(user);
+
+            for (int i = 2; i >= 0; i--) {
+                DailyLog log = new DailyLog(LocalDate.now().minusDays(i), user.getName());
+                log.setWeight(62 - (i * 0.1));
+                log.setSteps(9000);
+                log.setSleep(new Sleep(7));
+                stats.saveDailyLog(log);
             }
-            int age = (int)(Math.random() * 50) + 18;
-            double height = Math.random() * 40 + 150;
-            double weight = Math.random() * 50 + 50;
-            int activityLevel = (int)(Math.random() * 5) + 1;
-            int goal = (int)(Math.random() * 3) + 1;
-            int dailySteps = (int)(Math.random() * 12000) + 2000;
 
-            users.add(new User(name, gender, age, height, weight, activityLevel, goal, dailySteps));
+            System.out.println("Statistika loodud " + stats.getAllLogs().size() + " sissekandega");
+
+        } catch (UniversalUserException e) {
+            System.out.println("Viga: " + e.getMessage());
         }
 
-        Scanner sc = new Scanner(System.in);
-        System.out.println("   TERE TULEMAST TERVISEÄPPI   \n");
-        // Kasutaja andmete sisestamine
-        System.out.print("Sisesta oma nimi: ");
-        String name = sc.nextLine();
-        System.out.print("Sisesta oma sugu (M või N): ");
-        String gender = sc.nextLine().toUpperCase();
-        System.out.print("Sisesta oma vanus: ");
-        int age = sc.nextInt();
-        System.out.print("Sisesta oma pikkus (cm): ");
-        double height = sc.nextDouble();
-        System.out.print("Sisesta oma kaal (kg): ");
-        double weight = sc.nextDouble();
-        System.out.println("Vali oma aktiivsuse tase (1-5):");
-        System.out.println("1 - Istuv eluviis");
-        System.out.println("2 - Kergelt aktiivne (trenn 2-3x nädalas)");
-        System.out.println("3 - Mõõdukalt aktiivne (trenn 4+ korda nädalas)");
-        System.out.println("4 - Aktiivne (füüsiliselt nõudlik töö)");
-        System.out.println("5 - Väga aktiivne (füüsiliselt nõudlik töö + trenn)");
-        int activityLevel = sc.nextInt();
-        System.out.println("Vali oma eesmärk (1-3):");
-        System.out.println("1 - Aktiivne rasvakaotus");
-        System.out.println("2 - Tervislik ja tasakaalustatud eluviis");
-        System.out.println("3 - Lihasmassi kasvatamine ja kaalutõus");
-        int goal = sc.nextInt();
-        System.out.print("Sisesta keskmine sammude arv päevas: ");
-        int dailySteps = sc.nextInt();
-        User mina = new User(name, gender, age, height, weight, activityLevel, goal, dailySteps);
-        // Kuva kasutaja info
-        System.out.println("       SINU PROFIIL");
-        System.out.println(mina);
-        System.out.println("BMI: " + String.format("%.1f", mina.calculateBMI()) + " - " + mina.getBMICategory());
-        System.out.println("\nSOOVITUSED:");
-        System.out.println("Päevane kalorivajadus: " + String.format("%.0f", mina.calculateCalorieNeeds()) + " kcal");
-        System.out.println("Makrotoitained: " + mina.calculateMacros());
-        sc.nextLine();
-
-        // Treeningute sisestamine
-        System.out.print("Sisesta tänase treeningu aktiivsuse tase (Madal, Keskmine, Kõrge): ");
-        String levelInput = sc.nextLine();
-
-        System.out.print("Sisesta treeningu kestus tundides: ");
-        double duration = sc.nextDouble();
-        sc.nextLine();
-
-        Workout w = new Workout(levelInput, duration);
-        w.calculateBurnedCalories(mina.getWeight());
-        System.out.println(w.toString());
-
-        System.out.print("Mitu tundi magasid? ");
-        double hours = sc.nextDouble();
-        sc.nextLine();
-
-        Sleep s = new Sleep(hours);
-        System.out.println(s.getSleepQualityAdvice());
-
-        System.out.print("Kirjelda oma kaebust (kaebus peab olema seotud toitumise, trennide, une, stressi või valuga): ");
-        String complaint = sc.nextLine();
-        HealthAdvice advice = new HealthAdvice(mina);
-        System.out.println(advice.giveAdvice(complaint));
-
-        sc.close();
-
-        // Testime loodud isikuid
-        for (int i = 0; i < users.size(); i++) {
-            User user = users.get(i);
-            System.out.println("\n       KASUTAJA #" + (i+1));
-            // Prindi kasutaja info
-            System.out.println(user);
-            System.out.println("BMI: " + String.format("%.1f", user.calculateBMI()) + " - " + user.getBMICategory());
-            System.out.println("Päevane kalorivajadus: " + String.format("%.0f", user.calculateCalorieNeeds()) + " kcal");
-            System.out.println("Makrotoitained: " + user.calculateMacros());
-            System.out.println("\n--- PÄEVA TOIDUD ---");
-
-            // Loome suvalised söögikorrad
-            Meal hommik = new Meal("Hommikusöök");
-            Food randomFood1 = söögidFailist.get((int)(Math.random() * söögidFailist.size()));
-            double grams1 = 100 + Math.random() * 200;
-            hommik.addFood(randomFood1, grams1);
-            System.out.println(hommik);
-
-            Meal lõuna = new Meal("Lõuna");
-            Food randomFood2 = söögidFailist.get((int)(Math.random() * söögidFailist.size()));
-            double grams2 = 200 + Math.random() * 300;
-            lõuna.addFood(randomFood2, grams2);
-            System.out.println(lõuna);
-
-            Meal õhtu = new Meal("Õhtusöök");
-            Food randomFood3 = söögidFailist.get((int)(Math.random() * söögidFailist.size()));
-            double grams3 = 150 + Math.random() * 250;
-            õhtu.addFood(randomFood3, grams3);
-            System.out.println(õhtu);
-
-            // Kokku päevas
-            double totalCals = hommik.getCalories() + lõuna.getCalories() + õhtu.getCalories();
-            double targetCals = user.calculateCalorieNeeds();
-            System.out.println(String.format("\nKOKKU: %.0f kcal (eesmärk: %.0f kcal, jääb: %.0f kcal)",
-                    totalCals, targetCals, targetCals - totalCals));
-
-            // Treeningu info
-            String[] treeninguTüübid = {"Madal", "Keskmine", "Kõrge"};
-            System.out.println("\n--- TREENING ---");
-            String workoutType = treeninguTüübid[(int)(Math.random() * 3)];
-            double durationHours = 0.5 + Math.random() * 1.5;
-            Workout workout = new Workout(workoutType, durationHours);
-            workout.calculateBurnedCalories(user.getWeight());
-            System.out.println(workout);
-
-            // Une info
-            System.out.println("\n--- UNI ---");
-            double sleepHours = 5 + Math.random() * 4;
-            Sleep sleep = new Sleep(sleepHours);
-            System.out.println(sleep);
-
-            // Tervisenõuanded
-            System.out.println("\n--- TERVISENÕUANDED ---");
-            HealthAdvice adviceRandom = new HealthAdvice(user);
-            String randomComplaint = complaints[(int)(Math.random() * complaints.length)];
-            System.out.println("Kaebus: " + randomComplaint);
-            System.out.println(adviceRandom.giveAdvice(randomComplaint));
-        }
     }
 }
