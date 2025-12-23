@@ -275,8 +275,8 @@ public class HealthAppUI extends Application {
                 dinner.addFood(new Food("Õhtu", targetCal * 0.3, 25, 45, 12), 100);
 
                 series.getData().add(new XYChart.Data<>("Hommikusöök", breakfast.getCalories()));
-                series.getData().add(new XYChart.Data<>("Lõuna", breakfast.getCalories()));
-                series.getData().add(new XYChart.Data<>("Õhtusöök", breakfast.getCalories()));
+                series.getData().add(new XYChart.Data<>("Lõuna", lunch.getCalories()));
+                series.getData().add(new XYChart.Data<>("Õhtusöök", dinner.getCalories()));
 
                 mealChart.getData().add(series);
 
@@ -313,3 +313,4 @@ public class HealthAppUI extends Application {
     }
 
 }
+
