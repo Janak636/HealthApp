@@ -16,11 +16,11 @@ public class HealthAppUI extends Application {
     @Override
     public void start(Stage stage) {
         // Load foods from file
-        try {
-            söögidFailist = Peaklass.loeSöögid(".idea/söögid.txt");
-        } catch (Exception e) {
-            new Alert(Alert.AlertType.ERROR, "Viga söökide laadimisel: " + e.getMessage()).showAndWait();
-            return;
+        //try {
+        //    söögidFailist = Peaklass.loeSöögid(".idea/söögid.txt");
+        //} catch (Exception e) {
+        //    new Alert(Alert.AlertType.ERROR, "Viga söökide laadimisel: " + e.getMessage()).showAndWait();
+        //    return;
         }
 
         // ============ LEFT SIDE UI ============
@@ -312,3 +312,4 @@ public class HealthAppUI extends Application {
         launch(args);
     }
 }
+
