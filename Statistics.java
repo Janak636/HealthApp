@@ -22,8 +22,7 @@ public class Statistics {
     }
 
     private void saveAllLogsToFile() {
-        try {
-            DataOutputStream dos = new DataOutputStream(new FileOutputStream(filePath));
+        try (DataOutputStream dos = new DataOutputStream(new FileOutputStream(filePath))) {
 
             dos.writeInt(logs.size());
 
@@ -31,7 +30,6 @@ public class Statistics {
                 dailyLog.writeToDataOutputStream(dos);
             }
 
-            dos.close();
             System.out.println("Päevik salvestatud!");
 
         } catch (IOException e) {
@@ -47,8 +45,7 @@ public class Statistics {
             return;
         }
 
-        try {
-            DataInputStream dis = new DataInputStream(new FileInputStream(filePath));
+        try (DataInputStream dis = new DataInputStream(new FileInputStream(filePath))) {
 
             int logCount = dis.readInt();
 
@@ -57,7 +54,6 @@ public class Statistics {
                 logs.add(log);
             }
 
-            dis.close();
             System.out.println("Laaditud " + logs.size() + " päeviku sissekannet.");
 
         } catch (Exception e) {
@@ -112,6 +108,10 @@ public class Statistics {
             totalFats += log.getTotalFats();
             totalSteps += log.getSteps();
             totalBurned += log.getCaloriesBurned();
+            if (log.getSleep() != null) {
+                totalSleep += log.getSleep().getDurationHours();
+                daysWithSleep++;
+            }
         }
 
         int days = periodLogs.size();
@@ -138,7 +138,7 @@ public class Statistics {
         report.append(String.format("Kalorid: %.0f kcal\n", avgCalories));
         report.append(String.format("Valgud: %.0f g\n", avgProtein));
         report.append(String.format("Süsivesikud: %.0f g\n", avgCarbs));
-        report.append(String.format("asvad: %.0f g\n\n", avgFats));
+        report.append(String.format("Rasvad: %.0f g\n\n", avgFats));
 
         report.append("AKTIIVSUS:\n");
         report.append(String.format("Sammud: %.0f\n", avgSteps));

@@ -48,7 +48,7 @@ class HealthAdvice {
             if (bmi < 18.5) {
                 advice += "BMI on liiga madal. Liiga madalad kalorid = stress + aeglasem rasvakaotus. ";
                 advice += "Keskendu valgurikkale toidule ja jõutreeningule. ";
-            } else if (bmi > 18.5 && bmi <= 25){
+            } else if (bmi >= 18.5 && bmi <= 25){
                 advice += "Oled tegelikult tervislikus kaalus. ";
                 advice += "Veendu, et sööd iga toidukorraga valku. ";
                 advice += "Keskendu aktiivsele eluviisile ja lihasmassi kasvatamisele. ";

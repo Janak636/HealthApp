@@ -113,6 +113,9 @@ public class DailyLog {
     }
 
     public void writeToDataOutputStream(DataOutputStream dos) throws IOException {
+        if (sleep == null) {
+            throw new IOException("Lisa uni!");
+        }
         dos.writeUTF(date.toString());
         dos.writeUTF(userName);
         dos.writeDouble(weight);
@@ -137,26 +140,23 @@ public class DailyLog {
         double totalCarbs = dis.readDouble();
         double totalFats = dis.readDouble();
         double caloriesBurned = dis.readDouble();
-
+        double sleepHours = dis.readDouble();
         DailyLog log = new DailyLog(date, userName);
 
         try {
             log.setWeight(weight);
             log.setSteps(steps);
+            log.setSleep(new Sleep(sleepHours));
         } catch (UniversalUserException e) {
             System.err.println("Vigased andmed failis: " + e.getMessage());
         }
 
-        log.setWeight(weight);
-        log.setSteps(steps);
         log.setNotes(notes);
         log.totalCalories = totalCalories;
         log.totalProtein = totalProtein;
         log.totalCarbs = totalCarbs;
         log.totalFats = totalFats;
         log.caloriesBurned = caloriesBurned;
-        double sleepHours = dis.readDouble();
-        log.setSleep(new Sleep(sleepHours));
 
         return log;
     }

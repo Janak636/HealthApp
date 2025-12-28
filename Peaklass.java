@@ -1,11 +1,9 @@
-import java.io.File;
 import java.time.LocalDate;
 import java.util.*;
 
 public class Peaklass {
 
     public static void main(String[] args) {
-
         System.out.println("TEST 1: Sobiv kasutaja");
 
         try {
@@ -138,24 +136,4 @@ public class Peaklass {
         }
 
     }
-
-    public static List<Food> loeSöögid(String failinimi) throws Exception {
-        List<Food> foods = new ArrayList<>();
-
-        try (Scanner sc = new Scanner(new File(failinimi))) {
-            while (sc.hasNextLine()) {
-                String[] parts = sc.nextLine().split(",");
-
-                String name = parts[0].trim();
-                double calories = Double.parseDouble(parts[1].trim());
-                double protein = Double.parseDouble(parts[2].trim());
-                double carbs = Double.parseDouble(parts[3].trim());
-                double fats = Double.parseDouble(parts[4].trim());
-
-                foods.add(new Food(name, calories, protein, carbs, fats));
-            }
-        }
-        return foods;
-    }
-
 }

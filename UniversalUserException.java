@@ -1,5 +1,5 @@
 public class UniversalUserException extends Exception {
-    public UniversalUserException(String veateade) {
-        super(veateade);
+    public UniversalUserException(String message){
+        super(message);
     }
 }
